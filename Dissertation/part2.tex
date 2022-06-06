@@ -15,6 +15,18 @@
   \item Сами микросервисы. Помимо их основной работы, они должны принимать с сервера входные данные и отправлять своему серверу выходные данные для последующей работы остальных сервисов.
 \end{enumerate}
 
+Схема представленного варианта изображена на Рисунке~\cref{fig:microservice}.
+
+\begin{figure}[ht]
+    \centerfloat{
+        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{tikz_example_compiled}}{}% присваиваемое предкомпилированному pdf имя файла (не обязательно)
+        \input{Dissertation/images/tikz_scheme.tikz}
+
+    }
+    \legend{}
+    \caption[Микросервисы]{Пример реализации среды выполнения на основе микросервисной архитектуры}\label{fig:microservice}
+\end{figure}
+
 Данный вариант был отвергнут в следствии существования более быстрого и удобного варианта реализации, описанного в следующей секции.
 
 \subsection{Фреймворк Robot Operating System}
@@ -26,19 +38,78 @@ TODO Вот тут надо понакопировать много информ
 TODO тут накопировать из Пункт 1.2 прошлого диплома
 
 \subsection{Альтернатива LiDAR}
-В качестве альтернативы, предложенной в предыдущем пункте, можно рассмотреть установку сенсора Xbox Kinect. TODO доделать
+В качестве альтернативы, предложенной в предыдущем пункте, можно рассмотреть иной способ получения информации об окружающем пространстве - использование камеры глубины. Одними из самых известных представителей являются камеры Xbox 360 Kinect, а также Intel RealSense Depth Camera D455, изображённые на Рисунке~\cref{fig:lidar-alts}~\cite{realsense,kinect-picture}.
+
+\begin{figure}[ht]
+    \centerfloat{
+        \hfill
+        \subcaptionbox[Intel® RealSense™ Depth Camera D455]{Внешний вид Intel® RealSense™ Depth Camera D455\label{fig:realsense}}{%
+            \includegraphics[width=0.5\linewidth]{realsense}}
+        \hfill
+        \subcaptionbox[Xbox 360 Kinect]{Внешний вид Xbox 360 Kinect\label{fig:kinect}}{%
+            \includegraphics[width=0.5\linewidth]{kinect}}
+        \hfill
+    }
+    \legend{}
+    \caption[Камеры глубины]{Одни из самых известных камер глубины на рынке}\label{fig:lidar-alts}
+\end{figure}
+
+Камеры глубины в отличии от привычных видеокамер могут соотносить пиксели не только с цветом, но и с расстоянием до объекта в этой точке, как это показано на Рисунке~\cref{fig:depth-example}~\cite{depth-cameras}. К сожалению, данный способ получения информации об окружающем пространстве не позволит получать полную картину вокруг робота в следствии маленького угла обзора представленных камер сравнительно с лазерным сканером из предыдущего пункта данной работы.
+
+\begin{figure}[ht]
+    \centerfloat{
+        \includegraphics[scale=0.27]{depth-example}
+    }
+    \caption{Пример изображения с камеры глубины Xbox 360 Kinect.}\label{fig:depth-example}
+\end{figure}
 
 \subsection{Изображение с видеокамеры}
-На компьютере NVIDIA Jetson Xavier NX, на котором будет исполняться нейросеть существует два варианта подключения видеокамеры, которые будут рассмотрены в пунктах ниже.
+На компьютере NVIDIA Jetson Xavier NX, на котором будет работать нейросеть, существует два варианта подключения видеокамеры, которые будут рассмотрены в пунктах ниже.
 
 \subsubsection{USB подключение}
 
+Такой вариант подключения является самым популярным и без проблемным, так как на рынке имеется большое количество универсальных видеокамер с подключением по USB для любых целей. Для задач данной работы отлично подойдёт видеокамера Logitech C720 с разрешением видеосъёмки 1280x720 пикселей, изображённая на Рисунке~\cref{fig:usb-camera}~\cite{usb-camera}.
+
+\begin{figure}[ht]
+    \centerfloat{
+        \includegraphics[scale=0.27]{usb-camera}
+    }
+    \caption{Внешний вид USB видеокамеры Logitech C720}\label{fig:usb-camera}
+\end{figure}
+
 \subsubsection{CSI подключение}
+
+Данный способ подключения обладает как преимуществами, так и недостатками в сравнении с классическим USB подключением. Сравнительный анализ можно найти в Таблице~\cref{fig:usb-camera}~\cite{compare-csi-usb}.
+
+\begin{table} [htbp]
+    \centering
+    \begin{threeparttable}% выравнивание подписи по границам таблицы
+        \caption{Сравнение способов подключения видеокамеры к компьютеру NVIDIA Jetson Xavier NX}\label{tab:CameraCompare}%
+        \begin{tabular}{| p{4cm} || p{6cm} | p{6cm}l |}
+            \hline
+            Рассматриваемый аспект       & \centering USB 3.0 подключение                                                 & \centering CSI подключение                                                     & \\
+            \hline
+            Доступность                              & \centering  Широкий выбор модельного ряда                             & \centering Единственная совместимая камера                     & \\
+            \hline
+            Ширина канала данных           & \centering  400 МБ/с                                                                       & \centering  320 МБ/с по одной линии (всего 4 линии)           & \\
+            \hline
+            Надёжность                              & \centering  USB порт, который относительно тяжело сломать & \centering Легко переламывающийся шлейф и коннектор & \\
+            \hline
+            Максимальная длина кабеля & \centering  Менее 5 метров                                                            & \centering  Менее 30 сантиметров                                          & \\
+            \hline
+            <<Горячее>> подключение    & \centering  Поддерживается                                                          & \centering  Не поддерживается                                              & \\
+            \hline
+            Габариты устройства              & \centering  Как правило, небольшие: 73x32x66 мм                      & \centering  Крошечный размер: 25x24x9 мм                          & \\
+            \hline
+        \end{tabular}
+    \end{threeparttable}
+\end{table}
 
 \section{Шасси робота}
 TODO здесь написать о муках выбора шасси, о том что существуют шасси на колёсах и гусеницах
 
 \section{Рассмотрение аналогов}
+TODO напихать аналогов с прошлого диплома
 
 \begin{figure}[ht]
     \centerfloat{
