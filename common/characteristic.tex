@@ -29,7 +29,7 @@
 {\defpositions}
 \begin{enumerate}[beginpenalty=10000] % https://tex.stackexchange.com/a/476052/104425
   \item Если робот был запущен без ошибок, то он будет предоставлять все необходимые данные управляющей нейронной сети;
-  \item Если роботу были предоставлены управляющие сигналы для движения, то он с минимальной задержкой и должен исполнить их.
+  \item Если роботу были предоставлены управляющие сигналы для движения, то он с минимальной задержкой исполнит их.
 \end{enumerate}
 
 {\reliability} полученного результата работы обеспечивается соответствующими экспериментами. \ Результаты находятся в соответствии с договорённостями научного консультанта и автора данной работы.
@@ -72,16 +72,19 @@
         %
         \nocite{*}%
         %
-        {\publications} Основные результаты по теме работы изложены в~\arabic{citeauthor}~печатных изданиях%
-        %\arabic{citeauthorvak} из которых изданы в журналах, рекомендованных ВАК\sloppy%
-        \ifnum \value{citeauthorscopuswos}>0%
-            , \arabic{citeauthorscopuswos} "--- в~периодических научных журналах, индексируемых Web of~Science и Scopus\sloppy%
-        \fi%
-        \ifnum \value{citeauthorconf}>0%
-            , \arabic{citeauthorconf} "--- в~тезисах докладов.
-        \else%
-            .
-        \fi%
+        %{\publications} Основные результаты по теме работы изложены в~\arabic{citeauthor}~печатных изданиях%
+        %%\arabic{citeauthorvak} из которых изданы в журналах, рекомендованных ВАК\sloppy%
+        %\ifnum \value{citeauthorscopuswos}>0%
+        %    , \arabic{citeauthorscopuswos} "--- в~периодических научных журналах, индексируемых Web of~Science и Scopus\sloppy%
+        %\fi%
+        %\ifnum \value{citeauthorconf}>0%
+        %    , \arabic{citeauthorconf} "--- в~тезисах докладов.
+        %\else%
+        %    .
+        %\fi%
+        
+        {\publications} Основные результаты по теме работы изложены в~\arabic{citeauthor}~докладах и печатных изданиях --- периодических научных журналах, индексируемых Web of~Science и Scopus.
+        
         %\ifnum \value{citeregistered}=1%
         %    \ifnum \value{citeauthorpatent}=1%
         %        Зарегистрирован \arabic{citeauthorpatent} патент.
@@ -111,11 +114,8 @@
         % Процитированные здесь работы:
         %  * попадают в авторскую библиографию, при usefootcite==0 и стиле `\insertbiblioauthorimportant`.
         %  * ни на что не влияют в противном случае
-        \nocite{vakbib2}%vak
-        \nocite{patbib1}%patent
-        \nocite{progbib1}%program
-        \nocite{bib1}%other
-        \nocite{confbib1}%conf
+        \nocite{ysip}
+        \nocite{gtc}
     \end{refsection}%
         %
         % Всё, что вне этих двух refsection, это refsection=0,
